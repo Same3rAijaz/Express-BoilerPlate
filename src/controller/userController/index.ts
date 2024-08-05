@@ -27,11 +27,11 @@ export default class userController {
         if (oldUser) {
             throw new BadRequestError('User already exists');
         }
-        const user = await this.model.create(req.body);
-        const token = JwtUtils.generateToken({ _id: user._id, role: user.role });
         if (req.body.password) {
             req.body.password = await PasswordUtils.hashPassword(req.body.password)
         }
+        const user = await this.model.create(req.body);
+        const token = JwtUtils.generateToken({ _id: user._id, role: user.role });
         return new SuccessResponse('User created successfully', { user, token }).send(res);
     })
     update = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
